@@ -44,3 +44,5 @@ class User(db.Model):
                 "birth_year": self.birth_year,
                 "gender": self.gender,
             }
+
+            
