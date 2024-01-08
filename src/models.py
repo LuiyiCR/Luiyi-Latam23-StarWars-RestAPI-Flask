@@ -7,6 +7,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    favorites = db.relationship('Favorites', backref='user', lazy=True )
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -45,4 +46,56 @@ class User(db.Model):
                 "gender": self.gender,
             }
 
-            #test
+    class Planet(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(120), nullable=False)
+        diameter = db.Column(db.String(15))
+        rotation_period = db.Column(db.String(15))
+        orbital_period = db.Column(db.String(15))
+        gravity = db.Column(db.String(15))
+        population = db.Column(db.String(15))
+        climate = db.Column(db.String(50))
+        terrain = db.Column(db.String(50))
+        surface_water = db.Column(db.String(15))
+
+        def __repr__(self):
+            return '<Planet%r>' % self.name
+        
+        def serialize(self):
+            return {
+                "id": self.id,
+                "name": self.name,
+                "diameter": self.diameter,
+                "rotation_period": self.rotation_period,
+                "orbital_period": self.orbital_period,
+                "gravity": self.gravity,
+                "population": self.population,
+                "climate": self.climate,
+                "terrain": self.terrain,
+                "surface_water": self.surface_water,
+            } 
+        
+    class Favorites(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+        people_id = db.Column(db.Integer, db.ForeignKey('people.id'))
+        planet_id = db.Column(db.Integer, db.ForeignKey('planet.id'))
+
+        def __repr__(self):
+            return '<Favorites %r>' % self.id
+            
+        def serialize(self):
+            return {
+                 "id": self.id,
+                 "user_id": self.user_id,
+                "people_id": self.people_id,
+                "planet_id": self.planet_id,
+                }
+            
+
+
+
+
+        
+        
+
