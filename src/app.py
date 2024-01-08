@@ -38,13 +38,24 @@ def sitemap():
 
 # Endpoint to get all users
 @app.route('/user', methods=['GET'])
-def handle_hello():
+def get_all_users():
+    users = User.query.all()
+    if users:
+        serialize_users = [user.serialize() for user in users]
+        return jsonify(serialize_users), 200
+    else:
+        return jsonify({"error": "Users not found"}), 404
 
-    response_body = {
-        "msg": "Hello, this is your GET /user response "
-    }
+# Endpoint to get a single user by ID
+@app.route('/user/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    user = User.query.get(user_id)
+    if user:
+        serialize_user = user.serialize()
+        return jsonify(serialize_user), 200
+    else:
+        return jsonify({"error": "User not fount"}), 404
 
-    return jsonify(response_body), 200
 
 # Endpoint to get all people
 @app.route('/people', methods=['GET'])
