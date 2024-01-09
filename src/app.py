@@ -37,7 +37,7 @@ def sitemap():
 
 
 # Endpoint to get all users
-@app.route('/user', methods=['GET'])
+@app.route('/users', methods=['GET'])
 def get_all_users():
     users = User.query.all()
     if users:
@@ -82,7 +82,7 @@ def get_planets():
     return jsonify(serialized_planets), 200
 
 # Endpoint to get a single planet by ID
-@app.route('/planets/<int:planet_id>', methods=['GET'])
+@app.route('/planet/<int:planet_id>', methods=['GET'])
 def get_planet(planet_id):
     planet = Planet.query.get(planet_id)
     if planet:
