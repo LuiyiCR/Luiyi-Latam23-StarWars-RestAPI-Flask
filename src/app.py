@@ -90,6 +90,16 @@ def get_planet(planet_id):
         return jsonify(serialized_planet), 200
     else:
         return jsonify({"error": "Planet not found"}), 404
+    
+# Endpoint to get all favorites that belong to a user
+@app.route('/favorites/<int:user_id>', methods=['GET'])
+def get_favorites(user_id):
+    favorites = Favorites.query.filter_by(user_id=user_id).all()
+    serialized_favorite = [favorite.serialize() for favorite in favorites]
+    if favorites:
+        return jsonify(serialized_favorite), 200
+    else:
+        return jsonify({"error": "Favorites not found"}), 404
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
