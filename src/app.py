@@ -55,7 +55,7 @@ def get_user(user_id):
         serialize_user = user.serialize()
         return jsonify(serialize_user), 200
     else:
-        return jsonify({"error": "User not fount"}), 404
+        return jsonify({"error": "User not found"}), 404
 
 
 # Endpoint to get all people
@@ -174,40 +174,32 @@ def get_favorite_planet_by_id(planet_id):
     favorite_planet = Favorites.query.filter_by(planet_id=planet_id).first()
     return favorite_planet
 
-# Function to delete a favorite planet
-def delete_favorite_planet(favorite_planet):
-    db.session.delete(favorite_planet)
-    db.session.commit() 
-
-# Endpoint to delete a favorite planet with the given ID
-@app.route('/favorites/planet/<int:planet_id>', methods=['DELETE'])
-def delete_favorite_planet(planet_id):
-    favorite_planet = get_favorite_planet_by_id(planet_id)
+# Function to delete a favorite planet with the given ID for a specific user
+@app.route('/favorites/planet/<int:user_id>/<int:planet_id>', methods=['DELETE'])
+def delete_favorite_planet(user_id, planet_id):
+    favorite_planet = Favorites.query.filter_by(user_id=user_id, planet_id=planet_id).first()
     if favorite_planet:
-        delete_favorite_planet(favorite_planet)
+        db.session.delete(favorite_planet)
+        db.session.commit()
         return jsonify({"message": "Favorite planet deleted"}), 200
     else:
-        return jsonify({"error": "Favorite planet not found"}), 404
+      return jsonify({"error": "Favorite planet not found for this user"}), 404
 
-#Function to get a favorite person by ID
+#Function to get a favorite person with the given ID
 def get_favorite_person_by_id(people_id):
     favorite_person = Favorites.query.filter_by(people_id=people_id).first()
     return favorite_person
 
-# Function to delete a favorite person
-def delete_favorite_person(favorite_person):
-    db.session.delete(favorite_person)
-    db.session.commit()
-
-# Endpoint to delete a favorite person with the given ID
-@app.route('/favorites/people/<int:people_id>', methods=['DELETE'])
-def delete_favorite_person(people_id):
-    favorite_person = get_favorite_person_by_id(people_id)
+# Function to delete a favorite person with the given ID for a specific user
+@app.route('/favorites/people/<int:user_id>/<int:people_id>', methods=['DELETE'])
+def delete_favorite_person(user_id, people_id):
+    favorite_person = Favorites.query.filter_by(user_id=user_id, people_id=people_id).first()
     if favorite_person:
-        delete_favorite_person(favorite_person)
+        db.session.delete(favorite_person)
+        db.session.commit()
         return jsonify({"message": "Favorite person deleted"}), 200
     else:
-        return jsonify({"error": "Favorite person not found"}), 404
+        return jsonify({"error": "Favorite person not found for this user"}), 404
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
